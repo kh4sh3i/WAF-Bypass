@@ -14,7 +14,7 @@
 🔥 Web application firewalls (WAFs) bypass
 
 
-### 1.Regex Bypasses
+## 1. Regex Bypasses
 Different techniques can be used to bypass the regex filters on the firewalls. Examples include alternating case, adding line breaks, and encoding payloads. Resources for the various bypasses can be found at PayloadsAllTheThings and OWASP.
 
 ```
@@ -30,7 +30,7 @@ java%0ascript:alert(1) #using encoded newline characters
 ```
 
 
-## 2.Obfuscation
+## 2. Obfuscation
 While obfuscation is a possible way to bypass regex, they have been divided into different sections to showcase more exclusively a selection of obfuscation techniques.
 
 
@@ -58,7 +58,7 @@ data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+ #base64 encoding the javascri
 ```
 
 
-## 3.Charset Encoding
+## 3. Charset Encoding
 This technique involves modifying the Content-Type header to use a different charset (e.g. ibm037). A WAF that is not configured to detect malicious payloads in different encodings may not recognize the request as malicious. The charset encoding can be done in Python
 
 
@@ -84,7 +84,7 @@ Content-Length: 61
 
 
 
-## 4.Unicode Compatability
+## 4. Unicode Compatability
 Depending on the implementation of Unicode normalization, characters that share Unicode compatability may be able to bypass the WAF and execute as the intended payload.
 
 ```
