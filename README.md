@@ -10,11 +10,9 @@
 </h1>
 
 
-# WAF-Bypass
+# Bypassing WAFs
 🔥 Web application firewalls (WAFs) bypass
 
-
-## Bypassing WAFs
 
 ### 1.Regex Bypasses
 Different techniques can be used to bypass the regex filters on the firewalls. Examples include alternating case, adding line breaks, and encoding payloads. Resources for the various bypasses can be found at PayloadsAllTheThings and OWASP.
