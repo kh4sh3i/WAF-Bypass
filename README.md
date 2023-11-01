@@ -95,7 +95,7 @@ Depending on the implementation of Unicode normalization, characters that share 
 
 
 
-# Now I will explain more
+# More methods:
 
 ## 1. Case Toggling Technique
 Combine upper and lower case characters for creating efficient payloads.
