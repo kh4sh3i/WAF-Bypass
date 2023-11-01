@@ -16,7 +16,7 @@
 
 ## Bypassing WAFs
 
-### Regex Bypasses
+### 1.Regex Bypasses
 Different techniques can be used to bypass the regex filters on the firewalls. Examples include alternating case, adding line breaks, and encoding payloads. Resources for the various bypasses can be found at PayloadsAllTheThings and OWASP.
 
 ```
@@ -32,7 +32,7 @@ java%0ascript:alert(1) #using encoded newline characters
 ```
 
 
-#### Obfuscation
+## 2.Obfuscation
 While obfuscation is a possible way to bypass regex, they have been divided into different sections to showcase more exclusively a selection of obfuscation techniques.
 
 
@@ -50,7 +50,17 @@ data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+ #base64 encoding the javascri
 ```
 
 
-## Charset Encoding
+
+```
+# IIS, ASP Clasic
+<%s%cr%u0131pt> == <script>
+
+# Path blacklist bypass - Tomcat
+/path1/path2/ == ;/path1;foo/path2;bar/;
+```
+
+
+## 3.Charset Encoding
 This technique involves modifying the Content-Type header to use a different charset (e.g. ibm500). A WAF that is not configured to detect malicious payloads in different encodings may not recognize the request as malicious. The charset encoding can be done in Python
 
 
@@ -74,6 +84,20 @@ Content-Length: 61
 %86%89%93%85%95%81%94%85=KKaKKa%C6%D3%C1%C7K%A3%A7%A3&x=L%A7n
 ```
 
+
+
+## 4.Unicode Compatability
+Depending on the implementation of Unicode normalization, characters that share Unicode compatability may be able to bypass the WAF and execute as the intended payload.
+
+```
+# under the NFKD normalization algorithm, the characters on the left translate
+# to the XSS payload on the right
+＜img src⁼p onerror⁼＇prompt⁽1⁾＇﹥  --> ＜img src=p onerror='prompt(1)'>
+```
+
+
+## 5. Content Size
+In some cloud-based WAFs, the request won’t be checked if the payload exceeds a certain size. In these scenarios, it is possible to bypass the firewall by increasing the size of the request body or URL.
 
 
 
