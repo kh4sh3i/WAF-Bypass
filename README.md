@@ -104,8 +104,6 @@ In some cloud-based WAFs, the request won’t be checked if the payload exceeds 
 ## 1. Case Toggling Technique
 Combine upper and lower case characters for creating efficient payloads.
 ```
-Basic Request:
-
 <script>confirm()</script>
 
 Bypassed Technique:
@@ -114,8 +112,8 @@ Bypassed Technique:
 ```
 
 ## 2. URL Encoding Technique
-Encode normal payloads with % encoding/URL encoding.
-You can use Burp. It has an encoder/decoder tool.
+* Encode normal payloads with % encoding/URL encoding.
+* You can use Burp. It has an encoder/decoder tool.
 
 ```
 <Svg/x=">"/OnLoAD=confirm()//
@@ -126,8 +124,8 @@ Bypassed Technique:
 ```
 
 ## 3. Unicode Technique
-ASCII characters in Unicode encoding give us great variants for bypassing WAF.
-Encode entire or part of the payload for obtaining results.
+* ASCII characters in Unicode encoding give us great variants for bypassing WAF.
+* Encode entire or part of the payload for obtaining results.
 
 
 
