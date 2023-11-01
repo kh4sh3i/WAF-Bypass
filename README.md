@@ -101,18 +101,19 @@ In some cloud-based WAFs, the request won’t be checked if the payload exceeds 
 
 
 
+## 11. Uninitialized Variables Technique
 
 
 
 
 ## Tools
-w3af — Web Application Attack and Audit Framework
+* [w3af](https://github.com/andresriancho/w3af) — Web Application Attack and Audit Framework
 
-wafw00f — Identify and fingerprint Web Application Firewall
+* [wafw00f](https://github.com/EnableSecurity/wafw00f) — Identify and fingerprint Web Application Firewall
 
-BypassWAF – Bypass firewalls by abusing DNS history. This tool will search for old DNS A records and check if the server replies for that domain.
+* [BypassWAF](https://github.com/vincentcox/bypass-firewalls-by-DNS-history) – Bypass firewalls by abusing DNS history. This tool will search for old DNS A records and check if the server replies for that domain.
 
-CloudFail – is a tactical reconnaissance tool that tries to find the original IP address behind the Cloudflare WAF.
+* [CloudFail](https://github.com/m0rtem/CloudFail) – is a tactical reconnaissance tool that tries to find the original IP address behind the Cloudflare WAF.
 
 
 
